@@ -155,7 +155,7 @@ def main():
     
     parser = argparse.ArgumentParser(
         description='Display test image on Push 3',
-        epilog='This tool displays the hllo_wrld.png test image on your Push 3 device.'
+        epilog='This tool displays the test_image.png test image on your Push 3 device.'
     )
     parser.add_argument('--debug', '-d', action='store_true', 
                        help='Enable debug output')
@@ -164,11 +164,11 @@ def main():
     
     # Find the test image
     script_dir = Path(__file__).parent
-    test_image = script_dir / 'hllo_wrld.png'
+    test_image = script_dir / 'test_image.png'
     
     if not test_image.exists():
         print(f"Error: Test image not found at {test_image}")
-        print("Make sure hllo_wrld.png is in the same directory as this script.")
+        print("Make sure test_image.png is in the same directory as this script.")
         sys.exit(1)
     
     try:

@@ -1,27 +1,32 @@
-# Documentation Overview
+# push3-protocol
 
-### Protocol Analysis
+Reverse-engineered protocol documentation for the Ableton Push 3. Ableton publishes no official API - this covers the USB display protocol, MIDI mapping, pad sensitivity curves, and SysEx commands.
 
-#### - Quickstart:
+Push 3 is largely backward-compatible with Push 2 at the protocol level. Most differences are in transfer chunk size and a handful of Push-3-only SysEx extensions.
 
-* **[Push 3 + Python - A Beginner's Quickstart](protocol-analysis/push3-python-quickstart.md)** - A quick guide to interact with the Push 3 for the first time.
-* **[Push 2 vs Push 3 Protocol Comparison](protocol-analysis/push2-push3-protocol.md)** - Detailed compatibility analysis highlighting differences and nuances between both devices.
+---
 
-#### - More in-depth:
+## Docs
 
-* **[Push 3 USB Display Protocol](protocol-analysis/push3-display-protocol.md)** - Full documentation of the USB framebuffer implementation specific to the Push 3.
-* **[Push 2 vs Push 3 Pad Sensitivity Curve Protocol](protocol-analysis/push2-push3-curve-protocol.md)** - Explanation of how pad sensitivity curves are generated and how they differ between Push 2 and Push 3.
+- [Quickstart](docs/quickstart.md) - open ports, enter User Mode, light a pad, log presses
+- [Display Protocol](docs/display-protocol.md) - USB framebuffer, encryption, image prep, sending frames
+- [Button Mapping](docs/buttons.md) - all 70+ buttons with CC values
+- [Encoder Mapping](docs/encoders.md) - 10 encoders, touch detection, rotation values
+- [Push 2 Compatibility](docs/push2-compat.md) - what changed between devices, pad curve differences, porting guide
 
-### Interface Mapping
+## Tools
 
-* **[Button Mapping](interface-mapping/buttons.md)** - All 70+ buttons with CC values.
-* **[Encoder Mapping](interface-mapping/encoders.md)** - 10 encoders with touch detection.
+Research and testing scripts in [tools/](tools/). Requires `pyusb`, `pillow`, `mido`, `python-rtmidi`.
 
-### Research Tools
+- `display_test.py` - push an image to the display
+- `text_renderer.py` - generate display frames with text
+- `midi_monitor.py` - log incoming MIDI in real time
+- `midi_test.py` - test LED output and SysEx
 
-* **[Research Tools](tools)** - Hardware testing and analysis scripts
+See [tools/README.md](tools/README.md) for setup and usage.
 
-  * `display_test.py` - USB display testing with included test image
-  * `text_renderer.py` - Dynamic parameter display generation
-  * `midi_monitor.py` - Real-time MIDI message monitoring and analysis
-  * `midi_test.py` - LED control and MIDI functionality testing
+---
+
+Push 2 information references [DrivenByMoss](https://github.com/git-moss/DrivenByMoss) and Ableton's official Push 2 documentation.
+
+Cheers.
