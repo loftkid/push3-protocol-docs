@@ -1,8 +1,6 @@
-# push3-protocol
+# push3-protocol-docs
 
-Reverse-engineered protocol documentation for the Ableton Push 3. Ableton publishes no official API - this covers the USB display protocol, MIDI mapping, pad sensitivity curves, and SysEx commands.
-
-Push 3 is largely backward-compatible with Push 2 at the protocol level. Most differences are in transfer chunk size and a handful of Push-3-only SysEx extensions.
+Reverse-engineered protocol documentation for the Ableton Push 3. Ableton publishes no official API - this covers the USB display protocol, MIDI mapping, pad sensitivity curves, SysEx commands, MPE, and audio interface configuration.
 
 ---
 
@@ -11,8 +9,8 @@ Push 3 is largely backward-compatible with Push 2 at the protocol level. Most di
 - [Quickstart](docs/quickstart.md) - open ports, enter User Mode, light a pad, log presses
 - [Display Protocol](docs/display-protocol.md) - USB framebuffer, encryption, image prep, sending frames
 - [Button Mapping](docs/buttons.md) - all 70+ buttons with CC values
-- [Encoder Mapping](docs/encoders.md) - 10 encoders, touch detection, rotation values
-- [Push 2 Compatibility](docs/push2-compat.md) - what changed between devices, pad curve differences, porting guide
+- [Encoder Mapping](docs/encoders.md) - 10 encoders, touch detection, rotation values, touch strip
+- [SysEx Protocol](docs/sysex.md) - pad sensitivity curves, MPE, touch strip modes, audio interface
 
 ## Tools
 
@@ -24,9 +22,5 @@ Research and testing scripts in [tools/](tools/). Requires `pyusb`, `pillow`, `m
 - `midi_test.py` - test LED output and SysEx
 
 See [tools/README.md](tools/README.md) for setup and usage.
-
----
-
-Push 2 information references [DrivenByMoss](https://github.com/git-moss/DrivenByMoss) and Ableton's official Push 2 documentation.
 
 Cheers.

@@ -138,8 +138,14 @@ Note numbers run left-to-right, bottom-to-top. Bottom-left is 36, top-right is 9
 
 ## Troubleshooting
 
+<details>
+<summary>Push 2 compatibility</summary>
+
+Push 2 and Push 3 share the same manufacturer ID (`00 21 1D`), device family (`01 01`), SysEx format, pad note numbers, and encoder CC values. Most MIDI code written for Push 2 works on Push 3 unchanged.
+
+</details>
+
 - Pad doesn't light: wrong port, or User Mode not set.
 - No pad presses: input port not open, or DAW is blocking it.
 - Wrong color: velocity controls color in User Mode. Try values 20, 60, 100.
 
-Cheers.

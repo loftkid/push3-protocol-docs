@@ -134,21 +134,16 @@ JOG_WHEEL = {
 
 ## Touch Strip
 
-Vertical touch-sensitive strip on the left side for pitch bend and modulation.
-
-| Function | CC Value | Notes |
-|----------|----------|-------|
-| **Touch Detection** | 12 | Velocity 127 when touched |
-| **Position Up** | *TBD* | Under investigation |
-| **Position Down** | *TBD* | Under investigation |
+Vertical touch-sensitive strip on the left side. Touch detection arrives as CC 12, position as a standard pitchbend message on channel 0.
 
 ```python
 TOUCH_STRIP = {
     'touch': {'cc': 12, 'velocity': 127},
-    'position_up': 'TBD',      # Needs further analysis
-    'position_down': 'TBD'     # Needs further analysis
+    'position': 'pitchbend channel 0',  # standard MIDI pitchbend, 0..16383
 }
 ```
+
+For mode configuration (pitchbend, volume, pan, discrete) and SysEx details, see [push3-extensions.md](push3-extensions.md#touch-strip).
 
 ## Encoder Behavior Patterns
 

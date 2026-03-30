@@ -128,6 +128,22 @@ send_frame(dev, fb)
 
 ---
 
+<details>
+<summary>Push 2 differences</summary>
+
+Push 2 uses the same frame format, header, and encryption. The only difference is transfer chunk size and target framerate:
+
+```python
+PUSH2_CHUNK_SIZE = 512    # vs 16,384 on Push 3
+PUSH2_TARGET_FPS = 15     # vs 30 on Push 3
+```
+
+Product ID is `0x1967` (Push 3 is `0x1969`).
+
+</details>
+
+---
+
 ## 6. Troubleshooting
 
 - On Linux, you need a udev rule or run as root to access the USB device.
@@ -135,4 +151,3 @@ send_frame(dev, fb)
 - Header is always 16 bytes, framebuffer always 327,664 bytes - assert both before sending.
 - Push 3 uses endpoint `0x01` OUT. Nothing else.
 
-Cheers.
