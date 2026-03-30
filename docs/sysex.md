@@ -283,24 +283,99 @@ def get_display_brightness(midi_out):
 
 ## LED Animations
 
-Pad and button LEDs support color transitions without continuous MIDI messages from the host. The starting color is sent on MIDI channel 0, the transition is sent on channels 1-15.
+Pad and button LED colors are set via `note_on` or CC messages. The MIDI channel controls animation:
 
-This is fully documented in the [Ableton Push 2 interface spec](https://github.com/Ableton/push-interface/blob/main/doc/AbletonPush2MIDIDisplayInterface.asc) - section 2.6.8 LED Animation. The mechanism works identically on Push 3.
+- Channel 0: static color, no animation
+- Channels 1-15: transition from the current channel-0 color to this color
+
+```python
+# Static color - no animation
+midi_out.send(mido.Message('note_on', note=36, velocity=5, channel=0))
+
+# Animated transition from current color to velocity=5
+# Channel determines transition type and speed (see table below)
+midi_out.send(mido.Message('note_on', note=36, velocity=5, channel=1))
+
+# Stop animation - send new static color on channel 0
+midi_out.send(mido.Message('note_on', note=36, velocity=0, channel=0))
+```
+
+Animation channel encoding:
+
+| Channel | Type | Duration |
+|---|---|---|
+| 1 | One-shot | 24th note (fastest) |
+| 2 | One-shot | 16th note |
+| 3 | One-shot | 8th note |
+| 4 | One-shot | Quarter note |
+| 5 | One-shot | Half note |
+| 6 | One-shot | Whole note (slowest) |
+| 7 | Blinking | 24th note |
+| 8 | Blinking | 16th note |
+| 9 | Blinking | 8th note |
+| 10 | Blinking | Quarter note |
+| 11 | Blinking | Half note |
+| 12 | Blinking | Whole note |
+| 13 | Pulsing | 16th note |
+| 14 | Pulsing | 8th note |
+| 15 | Pulsing | Quarter note |
+
+One-shot stops after the duration and adopts the target color as the new static value. Blinking and pulsing run continuously until stopped by a channel-0 message.
+
+Animations are synchronized via MIDI system realtime: `0xFA` (Start) and `0xFB` (Continue) reset the global phase, `0xF8` (Clock) advances it by 1/24th beat.
+
+---
+
+## Touch Strip Configuration
+
+Command `0x17` configures touch strip behavior. The configuration byte encodes 7 flags:
+
+```
+Bit 0: LEDs controlled by host (0 = Push controls LEDs, 1 = host controls LEDs)
+Bit 1: host sends sysex for LED control (0 = pitchbend/modwheel, 1 = sysex 0x19)
+Bit 2: position sent as mod wheel (0 = pitchbend, 1 = mod wheel CC1)
+Bit 3: LEDs show point (0 = bar from bottom, 1 = single point)
+Bit 4: bar starts at center (0 = bottom, 1 = center)
+Bit 5: auto-return enabled
+Bit 6: auto-return to center (0 = return to bottom, 1 = return to center)
+```
+
+```python
+def set_touch_strip_config(midi_out, flags: int):
+    send_sysex(midi_out, [0x17, flags & 0x7F])
+
+def get_touch_strip_config(midi_out):
+    send_sysex(midi_out, [0x18])
+    # Push replies with: F0 00 21 1D 01 01 18 <flags> F7
+
+# Examples
+set_touch_strip_config(midi_out, 0x00)  # defaults: Push controls LEDs, pitchbend, bar from bottom
+set_touch_strip_config(midi_out, 0b0000011)  # host controls LEDs via pitchbend
+set_touch_strip_config(midi_out, 0b0000111)  # host controls LEDs via sysex 0x19
+```
 
 ---
 
 ## Touch Strip LEDs
 
-When the host takes control of the touch strip LEDs, their 31 brightness values (0-7 each) can be set via command `0x19`.
+When the host controls the touch strip LEDs (`bit 1` of config set), 31 LED brightness values are sent via command `0x19`. Each value is 0-7 (3 bits). LED 0 is the bottom LED, LED 30 is the top.
 
 ```python
 def set_touch_strip_leds(midi_out, leds: list):
-    # leds: 31 values, each 0..7. led[0] = bottom, led[30] = top
     assert len(leds) == 31
+    assert all(0 <= v <= 7 for v in leds)
     send_sysex(midi_out, [0x19] + leds)
+
+# Example: full brightness bar from bottom up to position 15
+leds = [7] * 16 + [0] * 15
+set_touch_strip_leds(midi_out, leds)
+
+# Single point at position 20
+leds = [0] * 20 + [7] + [0] * 10
+set_touch_strip_leds(midi_out, leds)
 ```
 
-The host must first configure the touch strip to accept LED commands - see Touch Strip section below. Full LED control documentation in the [Ableton Push 2 interface spec](https://github.com/Ableton/push-interface/blob/main/doc/AbletonPush2MIDIDisplayInterface.asc) - section 2.6.4 and 2.10.
+Note: touch strip LEDs are not animatable - they only respond to direct `0x19` messages.
 
 ---
 
