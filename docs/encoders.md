@@ -73,18 +73,43 @@ VOLUME_ENCODER = {
 }
 ```
 
-## Swing & Tempo Encoder
+## Small Knob 1 - Tempo / Swing
 
-Combined swing and tempo control encoder with dual functionality.
-
-| Function | CC Value | Left Turn | Right Turn | Touch |
-|----------|----------|-----------|------------|-------|
-| **Swing/Tempo** | 14 | Velocity 127 | Velocity 1 | CC 10, Vel 127 |
+Controls tempo by default. Press to toggle between Tempo and Swing mode.
 
 ```python
-SWING_TEMPO_ENCODER = {
-    'touch': {'cc': 10, 'velocity': 127},
-    'rotation': {'cc': 14, 'left': 127, 'right': 1}
+SMALL_KNOB_1 = {
+    'rotation': {'cc': 14},   # left: 127, right: 1
+    'touch':    {'cc': 10, 'velocity': 127},
+    'press':    {'cc': 15},   # toggles Tempo <-> Swing mode
+}
+```
+
+Note: CC 15 is shared between this press and Small Knob 2 rotation - see below.
+
+---
+
+## Small Knob 2 - Play Position (Push 3 only)
+
+Controls the play cursor position. Press to switch to loop start control.
+
+```python
+SMALL_KNOB_2 = {
+    'rotation': {'cc': 15},   # left: 127, right: 1 - shared with Small Knob 1 press
+    'touch':    {'cc': 9, 'velocity': 127},
+}
+```
+
+---
+
+## Knob 9 - Master Volume
+
+Rightmost encoder, controls master volume. On Push 3, pressing Browse (CC 111) toggles between master volume and cue mix volume.
+
+```python
+KNOB_9 = {
+    'rotation': {'cc': 79},   # left: 127, right: 1
+    'touch':    {'cc': 8, 'velocity': 127},
 }
 ```
 
