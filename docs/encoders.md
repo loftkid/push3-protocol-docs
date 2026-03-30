@@ -44,36 +44,36 @@ ENCODERS = {
 }
 ```
 
-## Small Knob 1 - Tempo / Swing
+## Tempo/Swing Knob
 
 Controls tempo by default. Press to toggle between Tempo and Swing mode.
 
 ```python
-SMALL_KNOB_1 = {
+TEMPO_KNOB = {
     'rotation': {'cc': 14},   # left: 127, right: 1
     'touch':    {'cc': 10, 'velocity': 127},
     'press':    {'cc': 15},   # toggles Tempo <-> Swing mode
 }
 ```
 
-Note: CC 15 is shared between this press and Small Knob 2 rotation - see below.
+Note: CC 15 is shared between this press and play/cursor position knob rotation - see below.
 
 ---
 
-## Small Knob 2 - Play Position (Push 3 only)
+## Play/Cursor Position Knob
 
 Controls the play cursor position. Press to switch to loop start control.
 
 ```python
-SMALL_KNOB_2 = {
-    'rotation': {'cc': 15},   # left: 127, right: 1 - shared with Small Knob 1 press
+POSITION_KNOB = {
+    'rotation': {'cc': 15},   # left: 127, right: 1 - shared with Tempo/Swing Knob press
     'touch':    {'cc': 9, 'velocity': 127},
 }
 ```
 
 ### Disambiguating CC 15
 
-Small Knob 1 press and Small Knob 2 rotation both use CC 15. Distinguish them by value:
+Tempo/Swing press and Play/Cursor rotation both use CC 15. Distinguish them by value:
 
 - Press/release always sends exactly 0 or 127
 - Encoder steps always send 1-63 (right) or 64-126 (left) - never 0 or 127
@@ -81,20 +81,20 @@ Small Knob 1 press and Small Knob 2 rotation both use CC 15. Distinguish them by
 ```python
 def handle_cc15(value: int):
     if value == 0 or value == 127:
-        on_knob1_press(pressed=(value == 127))
+        on_tempo_knob_press(pressed=(value == 127))
     else:
         delta = decode_encoder(value)
-        on_knob2_rotate(delta)
+        on_position_knob_rotate(delta)
 ```
 
 ---
 
-## Knob 9 - Master Volume
+## Master Volume Knob
 
 Rightmost encoder, controls master volume. On Push 3, pressing Browse (CC 111) toggles between master volume and cue mix volume.
 
 ```python
-KNOB_9 = {
+MASTER_VOLUME = {
     'rotation': {'cc': 79},   # left: 127, right: 1
     'touch':    {'cc': 8, 'velocity': 127},
 }
