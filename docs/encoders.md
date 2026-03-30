@@ -155,7 +155,7 @@ TOUCH_STRIP = {
 }
 ```
 
-For mode configuration (pitchbend, volume, pan, discrete) and SysEx details, see [push3-extensions.md](push3-extensions.md#touch-strip).
+For mode configuration (pitchbend, volume, pan, discrete) and SysEx details, see [sysex.md](sysex.md#touch-strip).
 
 ## Encoder Behavior Patterns
 
