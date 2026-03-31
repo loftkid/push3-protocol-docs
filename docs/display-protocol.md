@@ -2,8 +2,6 @@
 
 960x160px display, RGB565 little-endian, USB 2.0 Bulk. No official documentation exists - this is based on reverse engineering.
 
-For Push 2 vs Push 3 transfer differences, see [push2-compat.md](push2-compat.md).
-
 ---
 
 ## 1. Frame Structure
